@@ -1,12 +1,12 @@
-Ruby Notes
+# Ruby Notes
 
 Uses snake_case
 
 Ruby doesn’t care about whitespace, but convention is the block of code following an if etc should be indented two spaces.
 
-Comments
+### Comments
 
-# Single line comment
+\# Single line comment
 
 =begin
 Multiline comment
@@ -17,12 +17,12 @@ Initialise variable
 
 my_num = 100
 
-Printing 
+### Printing 
 
 puts "Sup"
 print "Hello" # doesn't start new line
 
-String methods
+### String methods
 
 "I love espresso".length 
 "Eric".reverse
@@ -58,7 +58,7 @@ String interpollation
 
 monkey = "Curious George"
 "I took #{monkey} to the zoo"
- # "I took Curious George to the zoo"
+ \# "I took Curious George to the zoo"
  
 ! for auto assignment
  ! modifies the value contained within the variable itself
@@ -67,7 +67,7 @@ last_name.capitalize! # changes last_name
 
 
 
-if elsif else
+### if elsif else
 
 if 2 > 1 
   print "It is!"
@@ -77,7 +77,7 @@ else
   print "No it's not!"
 end
 
-unless
+### unless
 
 short hand if statement. It will do whatever you ask unless the condition is true
 
@@ -92,7 +92,7 @@ end
 problem = false
 print "Good to go!" unless problem
 
-Comparison
+### Comparison
 ==
 !=
 < > <= >=
@@ -116,15 +116,15 @@ end
 
 
 
-Logical Operators
+### Logical Operators
 && 
 ||
 !
 
-# boolean_1 = (3 < 4 || false) && (false || true)
+boolean_1 = (3 < 4 || false) && (false || true)
 boolean_1 = true
 
-? methods
+#### ? methods
 
 Ruby methods that end with ? evaluate to the boolean values true or false.)
 
@@ -142,9 +142,9 @@ uses regex
 doesn't have ++/--
 
 
-Loops
+### Loops
 
-while loop
+#### while loop
 
 counter = 1
 while counter < 11
@@ -152,7 +152,7 @@ while counter < 11
   counter = counter + 1
 end
 
-until loop
+#### until loop
 
 It’s sort of like a backward while
 
@@ -163,7 +163,7 @@ until counter > 10
 end
 
 
-for loop
+#### for loop
 
 for num in 1...10 # exclude final number
   puts num
@@ -180,7 +180,7 @@ for i in a do
 end
 
 
-loop 
+#### loop 
 
 loop { print "Hello, world!" } # infinite loop
 
@@ -191,7 +191,7 @@ loop do
   break if i > 5	# break keyword 
 end
 
-next
+#### next
 
 The next keyword can be used to skip over certain steps in the loop. For instance, if we don’t want to print out the even numbers, we can write:
 
@@ -201,14 +201,14 @@ for i in 1..5
 end
 
 
-each iterator
+#### each iterator
 
 object.each { |item| 
-  # Do something 
+  \# Do something 
 }
 
 object.each do |item| 
-  # Do something 
+  \# Do something 
 end
 
 The variable name between | | can be anything you like: it’s just a placeholder for each element of the object you’re using .each on.
@@ -219,7 +219,7 @@ odds.each do |x|
   print x*2
 end
 
-.times iterator
+#### .times iterator
 
 10.times { print "Chunky bacon!" }
 
@@ -244,7 +244,7 @@ loop do
 end
 
 
-Arrays
+### Arrays
 
 demo_array = [100, 200, 300, 400, 500]
 print  demo_array[2]
@@ -269,7 +269,7 @@ a[-2] 	# 42
 a[-1]		# true
 a.last 	# same as [-1]
 
-Slice 
+#### Slice 
 
 slice - provide two arguments, an index and a number of elements, which returns the given number of elements starting at the given index
 a = [42, 8, 17, 99]
@@ -280,7 +280,7 @@ Directly slicing with bracket notation
 a[2, 2]		=> [17, 99]
 >> a[1..3]		=> [8, 17, 99]
 
-To array
+#### To array
 
 def array_of_10
   puts (1..10).to_a
@@ -291,7 +291,7 @@ end
     "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
 
-Hashes
+### Hashes
 
 Doesn’t have dot notation
 
@@ -341,7 +341,7 @@ frequencies.each { |word, frequency| puts word + " " + frequency.to_s }
 
 
 
-Methods
+#### Methods
 
 No arguments
 
@@ -376,7 +376,7 @@ def by_five?(n)
   return n % 5 == 0
 end 
 
-Splat arguments  *
+#### Splat arguments  *
 Asterisk after parameter means method can receive one or more arguments
 
 def what_up(greeting, *friends)
@@ -404,7 +404,7 @@ end
 1.times { puts "As am I!" }
 
 
-Sorting
+#### Sorting
 
 sort
 
@@ -429,7 +429,7 @@ end
 colors.reverse!
 
 
-Rspec 
+#### Rspec 
 
 rspec —format documentation 	# give long explanation of tests
 rspec -h 		# help 
