@@ -15,7 +15,12 @@ This can cause problems with birds like ducks which can fly and swim, but can’
 
 
 
-### Subtypes should not have stronger constraints on their methods that they override
+### Subtypes should not have stronger or weaker constraints on their methods that they override
+
+You can't make big changes to how the base class works - causes unexpected behaviour. 
+
+You can't return new exceptions, you can't change the return type of a method.
 
 A method in a subclass which takes an int argument shouldn’t throw an error when the number is negative, if it doesn’t in the superclass. 
-If it does, you have a case where the program will always run when the parent is called but not always if substituted with the subclass.
+If it does, you have a case where the program will always run when the parent is called but not always if substituted with the subclass. If you're not handling that error when you call the method based on the parent class, it can cause unhandled errors in your program. 
+
