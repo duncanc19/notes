@@ -39,14 +39,22 @@ An alternative solution is composition - where the correct methods and variables
 You can't have everything in a LibraryItem interface because different items have different fields. Here is an example of how to separate into interfaces:
 
 public interface ILibraryItem
+
 public interface IBook : ILibraryItem
+
 public interface IBorrowable
+
 public interface IBorrowableBook : IBorrowable, IBook
+
 public interface IAudioBook : ILibraryItem
+
 public interface IBorrowableAudioBook : IAudioBook, IBorrowable
 
+
 public class Book : IBorrowableBook (implements everything you have in IBorrowable, IBook and ILibraryItem)
+
 public class ReferenceBook : IBook (can't borrow reference books so only implements the IBook interface)
+
 
 Be careful not to break things up too much - e.g. Audiobook and DVD both have a runtime, so you may be tempted to break that out into an interface they can inherit from, but they're not really related in any way despite both having a runtime.
 
