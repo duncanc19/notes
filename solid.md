@@ -69,3 +69,12 @@ public class ReferenceBook : IBook (can't borrow reference books so only impleme
 Be careful not to break things up too much - e.g. Audiobook and DVD both have a runtime, so you may be tempted to break that out into an interface they can inherit from, but they're not really related in any way despite both having a runtime.
 
 You want small interfaces which can be built up to make larger interfaces, but at the core they are still modular so you can be more flexible, not violate the Open Closed principle and implement DRY(Don't Repeat Yourself).
+
+
+## Dependency Inversion Principle
+
+High level modules(anything that calls something else) should not depend on low level modules
+Both should depend on abstractions which should not depend on details.
+
+Dependency injection is one of the ways you make the principle work - passing in objects instead of initializing them in a class, means other classes don't need to worry about the implementation of that class.
+You should centralise making new objects into one place so you can easily swap things out.
