@@ -174,3 +174,100 @@ end
 ```
 
 When multiple responses, if extra expect statements it will continue returning the last argument
+
+### Partial Test Doubles
+
+You can test a regular object but add some features with a test double
+
+You can stub a value over an expected value 
+
+The first example shows that the underlying functionality still exists, you can see it in to_s, but for this one case when you call the year, it will now return 1975.
+
+The second example shows even if you set a variable in the test, if you put a stub over it using the allow statement, it will return the stub value.
+
+The third shows a class method.
+
+```ruby
+it "stubs instance methods on real objects" do
+  time = Time.new(2010, 1, 1, 12, 0, 0)
+  allow(time).to receive(:year).and_return(1975)
+  
+  expect(time.to_s).to eq('2010-01-01 12:00:00 -5000')
+  expect(time.year).to eq(1975)
+  
+it "stubs instance methods on real objects" do
+  hero = SuperHero.new
+  hero.name = 'Superman'
+  
+  allow(hero).to receive(:name).and_return('Clark Kent')
+  expect(hero.name).to eq('Clark Kent')
+end
+
+it "stubs class methods on real objects" do
+  fixed = Time.new(2010,1,1,12)
+  allow(Time).to receive(:now).and_return(fixed)
+  expect(Time.now.year).to eq(2010)
+end
+```
+
+This can be very useful for database calls or sending messages
+```ruby
+it "can stub database calls" do
+  dbl = double('Mock Customer')
+  allow(dbl).to receive(:name).and_return('Bob')
+  allow(Customer).to receive(:find).and_return(dbl)
+  
+  customer = Customer.find
+  expect(customer.name).to eq('Bob')
+end
+```
+
+### Message Expectations
+
+With allow, when that method is called it will pass out whatever you tell it to, but it's not obliged to do it, if the method isn't called in the test it isn't a problem.
+
+If you use a message expectation, it will only pass if the method is used. Without the last line the test would fail, whereas with allow it wouldn't be a problem. 
+
+```ruby
+it "expects a call and allows a response"
+  dbl = double("Chant")
+  expect(dbl).to receive(:hey!).and_return("Ho!")
+  dbl.hey!
+end
+```
+Order is not important if there's more than one expect, as long as they're both called, but you can specify it using ordered:
+
+```ruby
+it "works with #ordered when order matters" do
+  dbl = double("Multi_step")
+  expect(dbl).to receive(:step1).ordered
+  expect(dbl).to receive(:step2).ordered
+  
+  dbl.step1
+  dbl.step2
+end
+```
+
+### Message Argument Constraints
+
+The default when you use expect or allow for a method is .with(any_args)- a matcher for any arguments passed in
+
+If you want to pass in an argument you use .with
+
+```ruby
+it "allows constraints on arguments" do
+  dbl = double('Customer List')
+  expect(dbl).to receive(:sort).with('name')
+  dbl.sort('name')
+end
+```
+
+Can also use:
+```ruby
+with(no_args)
+with ('Rspec', anything)
+with(boolean)
+with(hash_including(:verbose => true)
+with(array_including(3))
+```
+
