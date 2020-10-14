@@ -1,4 +1,4 @@
-#Ruby Versioning and Rspec
+# Ruby Versioning and Rspec
 
 Ruby versions
 Shows the versions 
@@ -19,7 +19,7 @@ Rbenv rehash - tell rbenv to relink gems we’ve downloaded
 Rspec —help
 
    
-###Rspec Configuration
+### Rspec Configuration
 
 —color —no-color
 —format progress. —format documentation. -f d/p shorthand
@@ -33,7 +33,7 @@ Determines the order the tests are run
 
 Rspec —color
 
-Default config
+### Default config
 Global goes in user’s home directory - applies for all rspec files running on your computer
 ~/.rspec
 Project
@@ -42,7 +42,7 @@ Shared in source control(in git) so everyone can have the same configuration
 Local lets you have your own config - ignored by source control
 ./.rspec-local 
 
-###Initialise rspec
+### Initialise rspec
 
 Rspec --init
 Creates two files - the .rspec file(which is the project version as it’s in your project’s root directory) and the spec_helper.rb file
@@ -57,32 +57,35 @@ You can have a top level describe for the name of the class - then it’s good t
 
 You can use context too, which is an alias for describe, but is often used to group contexts - e.g. all tests relate to a user whose billing is overdue
 
-Rspec hierarchy
+### Rspec hierarchy
+
 Spec file		car_spec.rb
   Example group	describe
     Nested group	  describe/context
       Example		    it
 	expectations	      expect().to()
 
-Rspec Convention
+### Rspec Naming Convention
 Class method .method_name
 Method #method_name
 
 When running rspec, can give a line number to run just test on that line, e.g.
 rspec spec/car_spec.rb:7
 
-###Pending and skipping examples
-####Pending - shows as asterisk when spec run
+### Pending and skipping examples
+#### Pending - shows as asterisk when spec run
 omit the block - don’t write do end
 Use pending inside the block
 When test is pending, code is still run, if it passes, it shows up as failing to make it clear it doesn’t need to be pending
 
-####Skipping
+#### Skipping
 Use xdescribe or xit
 Use skip inside the block - can take argument
 skip(“”)
 
-###Expectations
+
+### Expectations
+
 One expectation per example, with more than one in an it block, only the first failure will come up
 
 expect().to()
@@ -95,7 +98,7 @@ Expectations are simple statements
 Matchers are used as arguments to to()
 
 
-###Test doubles
+### Test doubles
 
 An object that stands in or another object - like a body double for an actor
 Used when the real object is difficult or expensive(e.g. responses are slow, alters a database) to work with
@@ -106,7 +109,7 @@ Double/mock: a simple object preprogrammed with expectations and responses as pr
 
 Stub: an instruction to an object to return a specific response to a method call
 
-####Double and stub examples
+#### Double and stub examples
 
 it “allows setting responses” do
   dbl = double(“Chant”)
