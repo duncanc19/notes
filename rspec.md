@@ -271,3 +271,20 @@ with(hash_including(:verbose => true)
 with(array_including(3))
 ```
 
+
+### Message Count Constraints
+
+Constraints on how many times a method will be called.
+
+```ruby
+once
+twice
+exactly(n).times
+
+at_least(:once)
+at_least(n).times
+
+at_most(:twice)
+
+expect(post).to receive(:like).at_least(3).times
+```
