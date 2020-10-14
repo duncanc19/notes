@@ -1,44 +1,58 @@
 # Ruby Versioning and Rspec
 
-Ruby versions
+```ruby
+ruby versions
+```
 Shows the versions 
 
-Rbenv install version_number
-Rbenv local sets the folder to that version
+```ruby
+rbenv install version_number
+rbenv local # sets the folder to that version
+```
 
 Gem - a standard of how we share ruby code in packages
 
 Bundler provides a way to manage your gems
 Projects can have multiple dependencies which become difficult to manage manually
 
-Gem install rspec
-Gem update rspec
+```ruby
+gem install rspec
+gem update rspec
 
-Rspec —version
-Rbenv rehash - tell rbenv to relink gems we’ve downloaded
-Rspec —help
-
+rspec —version
+rbenv rehash # tell rbenv to relink gems we’ve downloaded
+rspec —help
+```
    
 ### Rspec Configuration
 
-—color —no-color
-—format progress. —format documentation. -f d/p shorthand
-Progress shows dots and Fs as tests are completed, documentation gives a list of all the test names
-—no-profile  —profile	gives info about the tests
-—no-fail-fast. —fail-fast 
-Fail-fast stops running tests as soon as it finds a failure
-Whether it reports failures as soon as it encounters them or wait until end to display all
-—order defined. —order random
-Determines the order the tests are run
+Configuration flags you can use, you can run them in the terminal or put them in your default config files
 
-Rspec —color
+```ruby
+--color —no-color
+--format progress. --format documentation. -f d/p shorthand
+Progress shows dots and Fs as tests are completed, documentation gives a list of all the test names
+--no-profile  --profile	gives info about the tests
+--no-fail-fast. --fail-fast 
+# Fail-fast stops running tests as soon as it finds a failure - whether it reports failures as soon as it encounters them or wait until end to display all
+--order defined. --order random
+# Determines the order the tests are run
+
+rspec --color
+```
+
+
 
 ### Default config
-Global goes in user’s home directory - applies for all rspec files running on your computer
+
+Global 
+goes in user’s home directory - applies for all rspec files running on your computer
 ~/.rspec
+
 Project
 ./.rspec in the project’s root directory
 Shared in source control(in git) so everyone can have the same configuration
+
 Local lets you have your own config - ignored by source control
 ./.rspec-local 
 
@@ -66,6 +80,7 @@ Spec file		car_spec.rb
 	expectations	      expect().to()
 
 ### Rspec Naming Convention
+
 Class method .method_name
 Method #method_name
 
@@ -74,20 +89,24 @@ rspec spec/car_spec.rb:7
 
 ### Pending and skipping examples
 #### Pending - shows as asterisk when spec run
+
 omit the block - don’t write do end
 Use pending inside the block
 When test is pending, code is still run, if it passes, it shows up as failing to make it clear it doesn’t need to be pending
 
 #### Skipping
+
 Use xdescribe or xit
+
 Use skip inside the block - can take argument
+
 skip(“”)
 
 
 ### Expectations
 
 One expectation per example, with more than one in an it block, only the first failure will come up
-
+```ruby
 expect().to()
 expect().to_not()
 expect(@name).to eq(‘Kevin’)
@@ -96,7 +115,7 @@ expect(@visible)to be(true)
 expect(@numbers).to match_array([4,5,2])
 Expectations are simple statements
 Matchers are used as arguments to to()
-
+```
 
 ### Test doubles
 
@@ -111,6 +130,7 @@ Stub: an instruction to an object to return a specific response to a method call
 
 #### Double and stub examples
 
+```ruby
 it “allows setting responses” do
   dbl = double(“Chant”)
   allow(dbl).to receive(:hey!) {“Ho!”}
@@ -151,5 +171,6 @@ it “allows setting multiple responses” do
   expect(die.roll).to eq(6)
   expect(die.roll).to eq(6)
 end
+```
 
 When multiple responses, if extra expect statements it will continue returning the last argument
