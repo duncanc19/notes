@@ -288,3 +288,41 @@ at_most(:twice)
 
 expect(post).to receive(:like).at_least(3).times
 ```
+
+### Spies
+
+With doubles, you have to set up the expectation before you call the method, telling the mock object to be ready for a request.
+
+With spies, they keep track of the messages received so you can look back at them after.
+
+Spies are looser than other mock objects - you don't have to stub methods to make them available(using allow). They will let you send in any message without raising any objection. 
+
+```ruby
+# Double
+it “allows setting responses” do
+  dbl = double(“Chant”)
+  allow(dbl).to receive(:hey!) {“Ho!”}
+  expect(dbl.hey!).to eq(“Ho!”)
+end
+
+# Spy
+it “expects a call after it is received” do
+  dbl = spy(“Chant”)
+  # allow(dbl).to receive(:hey!).and_return(“Ho!”) you don't have to stub it
+  dbl.hey!
+  dbl.hey!
+  expect(dbl).to have_received(:hey!).twice
+end
+```
+
+If you want to use to have_received with a partial test double(on a real object), you have to use an allow statement.
+
+```ruby
+it "expects a call after it is received" do
+  customer = Customer.new
+  allow(customer).to receive(:send_invoice)
+  customer.send_invoice
+  expect(customer).to have_received(:send_invoice)
+```
+
+With spies, the focus is on checking that a method has been called rather than what it returns
