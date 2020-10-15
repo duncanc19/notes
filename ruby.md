@@ -66,9 +66,9 @@ last_name = gets.chomp
 last_name.capitalize! # changes last_name
 
 
-
 ### if elsif else
 
+```ruby
 if 2 > 1 
   print "It is!"
 elsif 3>1
@@ -76,11 +76,13 @@ elsif 3>1
 else 
   print "No it's not!"
 end
+```
 
 ### unless
 
 short hand if statement. It will do whatever you ask unless the condition is true
 
+```ruby
 hungry = false
 
 unless hungry
@@ -91,11 +93,37 @@ end
 
 problem = false
 print "Good to go!" unless problem
+```
 
 ### Comparison
+
+```ruby
 ==
 !=
 < > <= >=
+```
+
+#### Checking for equality
+
+```ruby
+x = 'Lynda'      x == 'Lynda' # true checks for loose equality 
+
+x = 1            x == 1 # true   x == 1.0. # true   x == "1" # false
+
+.eql? # strict equality
+
+x.eql?(1) # true    x.eql?(1.0) # false
+
+.equal? # reference equality
+
+x = 'Lynda'
+
+x.equal?('Lynda') # false
+
+# You can check references with x.object_id
+
+```
+
 
 Combined Comparison <=>
 
