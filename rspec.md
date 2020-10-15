@@ -117,6 +117,41 @@ Expectations are simple statements
 Matchers are used as arguments to to()
 ```
 
+#### Equivalence Matchers
+
+```ruby
+.to eq() # loose comparison
+.to eql() # strict comparison
+.to equal() # reference comparison
+.to be() # same as to equal
+```
+
+#### Truthiness Matchers
+
+```ruby
+expect(1 < 2).to be true
+expect(1 < 2).to be(true) # same as above
+expect(1 > 2).to be(false)
+
+expect('some string').to be_truthy
+expect(nil).to be_falsey
+expect(0).not_to be_falsey	# in ruby, 0 evaluates to true - different from some other languages
+expect(nil).to be_nil
+expect(false).not_to be_nil
+```
+
+#### Numeric Comparison Matchers
+
+```ruby
+expect(100).to eq(100)		expect(100).to be > 99
+expect(100).to be < 101		expect(100).to be >= 99
+expect(100).to be <= 100	expect(5).to be_between(3,5).inclusive
+
+expect(5).not_to be_between(3,5).exclusive
+expect(100).to be_within(5).of(105)
+expect(1..10).to cover(3)
+```
+
 ### Test doubles
 
 An object that stands in or another object - like a body double for an actor
