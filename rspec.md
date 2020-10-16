@@ -152,6 +152,16 @@ expect(100).to be_within(5).of(105)
 expect(1..10).to cover(3)
 ```
 
+#### Collections
+
+```ruby
+array = [1, 2, 3]
+expect(array).to include(2,3)
+expect(array).to start_with(1)
+expect(array).to end_with(3)
+expect(array).to match_array([3, 2, 1])  # same elements in any order
+expect(array).not_to match_array([3, 1])
+
 ### Test doubles
 
 An object that stands in or another object - like a body double for an actor
