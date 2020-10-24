@@ -117,3 +117,140 @@ function Hello({library, message, number}) {
     )
 }
 ```
+
+### Composing Components
+
+```js
+function City({name}) {
+    return (
+        <div>
+            <h1>Welcome to {name}</h1>
+            <p>It's a beautiful city</p>
+        </div>
+    )
+}
+
+function App() {
+    return (
+        <div>
+            <City name="New York" />
+            <City name="Brasilia" />
+            <City name="Rome" />
+        </div>
+    )
+}
+
+ReactDOM.render(
+    <App />, 
+    document.getElementById('root')
+);
+```
+
+### Rendering Lists
+
+You can render props dynamically using map so you don't have to worry about how many elements are passed in e.g. the length of an array
+
+```js
+const lakeList = ["Lake Titicaca", "Lake Baikal", "Lake Windermere"]
+
+function App({lakes}) {
+    return (
+        <div>
+            <h1>My Favourite Lakes!</h1>
+            <ul>
+                {lakes.map(lake => <li>{lake}</li>)}
+            </ul>
+        </div>
+    )
+}
+
+ReactDOM.render(
+    <App lakes={lakeList}/>, 
+    document.getElementById('root')
+);
+```
+
+### Rendering Lists of Objects
+
+```js
+const lakeList = [
+    {name: "Lake Titicaca",location: "Peru"},
+    {name: "Lake Baikal",location: "Russia"},
+    {name: "Lake Windermere",location: "The UK"}
+]
+
+function App({lakes}) {
+    return (
+        <div>
+            <h1>My Favourite Lakes!</h1>
+            <ul>
+                {lakes.map(lake => <li>{lake.name} is in {lake.location}</li>)}
+            </ul>
+        </div>
+    )
+}
+```
+
+### Adding Keys
+
+Keys help to keep track of which items have changed, added or removed. 
+It's an identifier for a dynamically created element.
+
+```js
+function App({lakes}) {
+    return (
+        <div>
+            <h1>My Favourite Lakes!</h1>
+            <ul>
+                {lakes.map(lake => <li key={lake.name}>{lake.name} is in {lake.location}</li>)}
+            </ul>
+        </div>
+    )
+}
+```
+
+### Conditional Rendering
+
+```js
+function Lake({name}) {
+    return <h1>Visit {name}!</h1>;
+}
+
+function SkiResort({name}) {
+return <h1>Visit {name}!</h1>;
+}
+
+function App(props) {
+    if (props.season == "summer") {
+        return <Lake name="Lake Windermere"/>;
+    } else if (props.season == "winter") {
+        return <SkiResort name="a ski slope"/>
+    } else {
+        return <h1>Come back in winter or summer!</h1>;
+    }
+    
+}
+
+ReactDOM.render(
+    <App season="summer"/>, 
+    document.getElementById('root')
+);
+```
+
+### React Fragments
+
+There must always be one parent element which is returned by a component, you can't pass in h1 and p for example, they'd have to be wrapped in a div.
+
+You can end up with loads of divs though on the HTML page, to combat this you can use React.Fragment, which doesn't show up as a div. The shorthand for this is an empty tag.
+
+```js
+function App() {
+    return (
+        <> // or <React.Fragment>
+            <Lake name="Lake Malawi" />
+            <SkiResort name="a ski resort" />
+        </> // </React.Fragment>
+    )
+}
+```
+
