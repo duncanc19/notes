@@ -254,3 +254,11 @@ function App() {
 }
 ```
 
+### Array Destructuring - JS feature
+
+```js
+const [food, snack, fruit] = ["popcorn", "pretzels", "pineapple"]
+const [,,fruit] = ["popcorn", "pretzels", "pineapple"]
+// you can just put commas if you don't need to access other variables
+console.log(fruit) // prints pineapple
+```
