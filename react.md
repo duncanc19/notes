@@ -352,3 +352,90 @@ ReactDOM.render(
     document.getElementById('root')
 );
 ```
+
+### Updating the useEffect dependency array
+
+useEffect takes a second argument called the dependency array, so that you can specify the state variable you want to listen to changes in. 
+
+It allows for smart rendering, so it won't trigger unnecessary rerenders and focus in on the element that has changed.
+
+In this example, without the dependency array argument in useEffect, every time a change is made in either of the input boxes, both would be console logged.
+
+```js
+function App() {
+    const [val, setVal] = useState("");
+    const [val2, setVal2] = useState("");
+
+    useEffect(() => {
+        console.log(`Your favourite food: ${val}`);
+    }, [val]);
+
+    useEffect(() => {
+        console.log(`Your second favourite food: ${val2}`);
+    }, [val2]);
+    
+    return (
+        <>
+            <label>
+                Favourite food: 
+                <input value = {val} onChange={e => setVal(e.target.value)} />
+            </label>
+            <br />
+            <label>
+                Second Favourite food: 
+                <input value = {val2} onChange={e => setVal2(e.target.value)} />
+            </label>
+              
+        </>
+       
+    )
+}
+
+ReactDOM.render(
+    <App />, 
+    document.getElementById('root')
+);
+```
+
+### Fetching data with useEffect
+
+This is an example of fetching info from an API(my Github info) inside useEffect and then displaying the info, passing the account name in as props. 
+
+```js
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+function GithubUser({login}) {
+    const [data, setData] = useState(null);
+    useEffect(() => {
+        fetch(`https://api.github.com/users/${login}`)
+            .then(res => res.json())
+            .then(setData)
+            .catch(console.error);
+    }, []);
+
+    if (data) {
+        return (
+            <div>
+                <h1>Say hello to {data.login}!</h1>
+                <h3>You can find {data.login} at {data.url}</h3>
+                <img source={data.avatar_url} width={100} />
+            </div>
+        );
+    }
+    return null;
+}
+
+
+function App() {
+       return (
+            <GithubUser login="duncanc19" />
+       );
+}
+
+ReactDOM.render(
+    <App />, 
+    document.getElementById('root')
+);
+```
