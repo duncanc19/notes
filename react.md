@@ -262,3 +262,93 @@ const [,,fruit] = ["popcorn", "pretzels", "pineapple"]
 // you can just put commas if you don't need to access other variables
 console.log(fruit) // prints pineapple
 ```
+
+### useState
+
+A hook is a function which allows you to add functionality to a component. React has several hooks to handle different use cases, useState is a hook.
+
+The first value(status) that is returned from the useState function is the state value and the second value is a function to change that state value.
+
+You can add destructuring to the React import statement to access useState without writing React.useState.
+
+```js
+import React, { useState } from 'react';
+
+function App() {
+    const [status, setStatus] = useState("Open");
+    return (
+        <>
+            <h1>Status: {status}</h1>
+            <button onClick={() => setStatus("Closed")}>Close Shop</button>
+            <button onClick={() => setStatus("Open")}>Open Shop</button>
+            <button onClick={() => setStatus("Back in 5")}>Take a Break</button>
+        </>
+    )
+}
+
+ReactDOM.render(
+    <App />, 
+    document.getElementById('root')
+);
+```
+
+Example with several state variables:
+
+```js
+function App() {
+    const [status, setStatus] = useState("Open");
+    const [manager, setManager] = useState("Alex");
+    const [year, setYear] = useState(2020);
+    return (
+        <>
+            <div>
+                <h1>Status: {status}</h1>
+                <h3>Manager: {manager}</h3>
+                <button onClick={() => setStatus("Closed")}>Close Shop</button>
+                <button onClick={() => setStatus("Open")}>Open Shop</button>
+                <button onClick={() => setStatus("Back in 5")}>Take a Break</button>
+                <button onClick={() => setManager("Michelle")}>Change Manager</button>
+            </div>
+            <div>
+                <h2>It's {year}!</h2>
+                <button onClick={() => setYear(year + 1)}>Happy New Year!</button>
+            </div>        
+        </>
+    )
+}
+```
+
+### useEffect
+
+The things that we want the component to do other than the UI are called effects. useEffect lets us add side effects to changes in the DOM
+
+```js
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+function Checkbox() {
+    const [checked, setChecked] = useState(false);
+    useEffect(() => {
+        alert(`checked: ${checked.toString()}`);
+    });
+    return (
+        <>
+            <input 
+                type="checkbox" 
+                value={checked} 
+                onChange={() => 
+                    setChecked(checked => !checked)
+                }
+            />  
+            {checked ? "checked" : "not checked"}
+        </>
+       
+    )
+}
+
+ReactDOM.render(
+    <Checkbox />, 
+    document.getElementById('root')
+);
+```
