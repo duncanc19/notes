@@ -10,6 +10,7 @@ Delete - DELETE
 dotnet new webapi
 set up template api with example controller
 
+dotnet run if in project repo or
 dotnet run --project(-p) projectname
 run project on local host
 ```
@@ -40,32 +41,78 @@ namespace HRApp.API.Controllers
         {
             return "Hello there";
         }
+  ```
+  
+ ### Example PUT and DELETE commands
+ ```cs
+        PUT api/values/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
 
-        // // GET api/values/5
-        // [HttpGet("{id}")]
-        // public ActionResult<string> Get(int id)
-        // {
-        //     return "value";
-        // }
-
-        // // POST api/values
-        // [HttpPost]
-        // public string Post([FromBody] string value)
-        // {
-        //     return "hello";
-        // }
-
-        // // PUT api/values/5
-        // [HttpPut("{id}")]
-        // public void Put(int id, [FromBody] string value)
-        // {
-        // }
-
-        // // DELETE api/values/5
-        // [HttpDelete("{id}")]
-        // public void Delete(int id)
-        // {
-        // }
+        DELETE api/values/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
     }
 }
 ```
+
+GET data is always visible in the URL, you should use POSTs when you want to send secure information and if you want to pass a lot of information in.
+
+
+### People example
+
+In Models folder, where there are classes for data types:
+```cs
+namespace apis.Models {
+    public class Person {
+    public int Id { get; set; } = 0;
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    }
+}
+```
+
+In Controllers folder, where the calls are made:
+```cs
+namespace apis.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PeopleController : ControllerBase
+    {
+        List<Person> people = new List<Person>();
+
+
+        public PeopleController()
+        {
+            people.Add(new Person { FirstName = "Bob", LastName = "Bobson", Id = 1 });
+            people.Add(new Person { FirstName = "Bill", LastName = "Bobson", Id = 2 });
+            people.Add(new Person { FirstName = "Brenda", LastName = "Bobson", Id = 3 });
+        }
+
+        [HttpGet]
+        public List<Person> Get()
+        {
+            return people;
+        }
+
+        [HttpGet("{id}")]
+        public Person GetPerson(int id)
+        {
+            return people.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        [HttpPost]
+        public void Post(Person value)
+        {
+            people.Add(value);
+        }
+    }
+}
+```
+
+
