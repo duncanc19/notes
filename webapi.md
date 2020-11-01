@@ -111,8 +111,35 @@ namespace apis.Controllers
         {
             people.Add(value);
         }
+        
+        [Route("firstnames")]
+        [HttpGet]
+        public List<string> GetFirstNames()
+        {
+            List<string> output = new List<string>();
+            foreach (var p in people)
+            {
+                output.Add(p.FirstName);
+            }
+            return output;
+        }
     }
 }
 ```
 
+For the bottom GET call which returns names, specified route gets added to the route of the class - api/people/firstnames
+
+Works the same way for GETs as putting [HttpGet("firstnames")]
+
+Passing in information through the URL:
+
+```cs
+        [HttpGet("{userId:int}/{age:int}")]
+        public string GetIdAndAge(int userId, int age)
+        {
+            
+            return $"Your ID is {userId} and you are {age}";
+        }
+```
+Access through https://localhost:5001/api/people/1/32
 
