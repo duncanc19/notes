@@ -255,3 +255,28 @@ public Tour Get(int id)
   return item;
 }
 ```
+
+You can specify the route above the class like the first example here or with RoutePrefix, \[controller] assigns the controller name: 
+```cs
+[ApiController]
+[Route("api/[controller]")]
+public class PeopleController : ControllerBase
+
+RoutePrefix("api/orders")
+```
+You can escape a route prefix on a request by using the tilda ~
+```cs
+[Route("~api/customers/{customerId:int}/orders")]
+```
+
+Route Constraints
+```cs
+alpha           bool
+datetime        decimal
+double          float
+guid            int
+length          long
+max             maxlength
+min             minlength
+range           regex
+```
