@@ -143,3 +143,101 @@ Passing in information through the URL:
 ```
 Access through https://localhost:5001/api/people/1/32
 
+
+The HTTP verb attributes([HttpGet] etc) allows you to change the names of your HTTP request methods so they don't have to include Get/Post at the start of the method name.
+
+Example:
+```cs
+[HttpGet]
+      public string SayHello()
+```
+
+### Return types
+
+void
+IHttpActionResult - place what you want to return inside the HTTP action, in the return type you can put it in <> brackets
+
+Example:
+```cs
+[HttpGet]
+public IHttpActionResult MyGetAction(MyRequest req) {
+  var data = GetData();
+  
+  if (data == null)
+    return InternalServerError(); // 500
+  if (!ModelState.IsValid)
+    return BadRequest(ModelState); // 400
+  return Ok(data); // 200
+  
+[HttpPost]
+        public ActionResult<User> Post([FromBody] UserInfo info)
+        {
+            Guid id = Guid.NewGuid();
+            string username = info.GenerateUsername();
+            Login login = new Login { Username = username, Password = "ABC" };
+            User user = new User (login, info, id);
+            return Ok(user);
+        }
+```
+Http Response Exception can be used so you can have strongly typed return values but this isn't great practice, throwing errors can cause problems. 
+
+```cs
+[HttpPost]
+public List<Tour> SearchTours([FromBody] TourSearchRequestDto request)
+{
+  if (request.MinPrice > request.MaxPrice)
+    throw new HttpResponseException(new HttpResponseMessage
+    {
+      StatusCode = HttpStatusCode.BadRequest,
+      Content = new StringContent("MinPrice must be less than MaxPrice")
+    });
+```
+
+ActionResult Helper Methods:
+```cs
+BadRequest() // 400
+Conflict()
+Content()
+Created()
+InternalServerError()
+NotFound()
+Ok() // 200
+Unauthorized()
+StatusCode()
+```
+
+### Validate Models
+
+Check that the information passed in by a request is valid using the ModelState
+
+Example where two fields are required:
+```cs
+public class AuthorizeRequestDto
+{
+  [Required]
+  [MinLegth(32), MaxLength(32)]
+  public string AppToken { get; set; }
+  
+  [Required]
+  [MinLegth(32), MaxLength(32)]
+  public string AppSecret { get; set; }
+}
+
+public class AuthorizeController : ApiController
+{
+  public IHttpActionResult Post(AuthorizeRequestDto request)
+  {
+    if (!ModelState.IsValid)
+      return BadRequest(ModelState);
+      
+    return Ok();
+```
+Validation attributes
+```cs
+[Compare()]             [CreditCard()]
+[DataType()]            [EmailAddress()]
+[MaxLength()]           [MinLength()]
+[Phone()]               [Range()]
+[RegularExpression()]   [Required()]
+[Url()]                 [ValidationAtrribute()]
+```
