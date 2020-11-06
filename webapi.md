@@ -241,3 +241,17 @@ Validation attributes
 [RegularExpression()]   [Required()]
 [Url()]                 [ValidationAtrribute()]
 ```
+
+### Attribute Routing
+
+Sets up the routes for requests right above them, instead of having to set the routes up in the startup.cs file
+
+```cs
+[Route("api/tour/{id:int}")] // specify type of input with :int, {} makes it dynamic
+public Tour Get(int id)
+{
+  var item = _context.Tours
+    .FirstOrDefault(i => i.TourId == id);
+  return item;
+}
+```
