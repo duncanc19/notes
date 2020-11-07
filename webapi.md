@@ -280,3 +280,20 @@ max             maxlength
 min             minlength
 range           regex
 ```
+
+### Models and Data Transfer Objects
+
+Data Transfer Objects are simple objects which only contain the data that we need.
+
+You can have a DTOs folder and then use a DTO as a return type instead of a whole object if there is information in an object you don't want to pass. In this example, a tour object also contains a note field which is not intended for users, so using a Dto can stop this information from being shared.
+
+```cs
+var query = _context.Tours
+  .Select(i => new TourDto {
+    Name = i.Name, Price = i.Price, Description = i.Description
+  });
+```
+
+### CRUD operations - Create, Read, Update, Delete with Entity Framework
+
+
