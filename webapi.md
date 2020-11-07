@@ -335,3 +335,27 @@ json.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
 ### Error Handling
 
+Exception filters are a reuseable way of handling errors, meaning you can avoid error handling code duplication. You can specify where the error handling is applied by adding the class as an attribute to a method or class, or adding it to config for the whole project.
+```cs
+using System.Web.Http.Filters;
+using System.Net.Http;
+
+public class DbUpdateExceptionFilterAttribute : ExceptionFilterAttribute
+{
+  public override void OnException(HttpActionExecutedContent context)
+  {
+    if (!(context.Exception is DbUpdateException)) return;
+    
+    var sqlException = context.Exception?.InnerException?.InnerException as SqlException;
+    if (sqlException?.Number == 2627) // number for violation of unique constraint
+      context.Response= new HttpResponseMessage(HttpStatusCode.Conflict);
+      
+    context.Response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+  }
+}
+
+// You can then call this filter which will run when an exception is thrown in a method/class by putting it as an attribute above the method/class:
+[DbUpdateExceptionFilter]
+// You can add it to all of the controllers by adding it to the config in the Startup.cs file
+config.Filters.Add(new DbUpdateExceptionFilterAttribute());
+```
