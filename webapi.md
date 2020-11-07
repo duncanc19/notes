@@ -296,4 +296,42 @@ var query = _context.Tours
 
 ### CRUD operations - Create, Read, Update, Delete with Entity Framework
 
+Select entity framework controller in VS Code or add using statements for it:
+```cs
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+
+[ResponseType(typeof(Reservation))]
+public async Task<IHttpActionResult> PostReservation(Reservation reservation)
+{
+  if (!ModelState.IsValid)
+  {
+    return BadRequest(ModelState);
+  }
+  
+  db.Reservations.Add(reservation);
+  await db.SaveChangesAsync();
+  return CreatedAtRoute("DefaultApi", new { id = reservation.ReservationId }, reservation);
+}
+```
+
+### Json.NET Settings
+
+You can change your serialization settings with Json.net. DateTime is an important type as you can select how dates are stored - Local(Your server's time), UTC(Greenwich Mean Time).
+
+You can set the formatting of your API to return data with indentation:
+```cs
+var json = config.Formatters.JsonFormatter.SerializerSettings;
+json.Formatting = Formatting.Indented;
+```
+
+ReferenceLoopHandling
+
+When converting to Json, some objects may have references back to their parents or to objects which contain a reference to the original object, which could lead to an infinite loop. To prevent problems like that we need to tell them to stop looping. You can throw an error, ignore or continue to serialize. Ignore means that it will move on from objects that it has already serialized.
+```cs
+var json = config.Formatters.JsonFormatter.SerializerSettings;
+json.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+```
+
+### Error Handling
 
