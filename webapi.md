@@ -335,6 +335,8 @@ json.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
 
 ### Error Handling
 
+#### Exception Filters
+
 Exception filters are a reuseable way of handling errors, meaning you can avoid error handling code duplication. You can specify where the error handling is applied by adding the class as an attribute to a method or class, or adding it to config for the whole project.
 ```cs
 using System.Web.Http.Filters;
@@ -359,3 +361,40 @@ public class DbUpdateExceptionFilterAttribute : ExceptionFilterAttribute
 // You can add it to all of the controllers by adding it to the config in the Startup.cs file
 config.Filters.Add(new DbUpdateExceptionFilterAttribute());
 ```
+
+#### Exception Loggers
+
+You can have an exception logger in a Loggers folder, which will log any exceptions which are raised during API calls. You override the Log method of the ExceptionLogger base class to change the standard way of logging exceptions. The default log method doesn't give any kind of response.
+
+```cs
+public class UnhandledExceptionLogger : ExceptionLogger
+{
+  public override void Log(ExceptionLoggerContext context)
+  {
+    var log = context.Exception.Message;
+    Debug.WriteLine(log);
+    // base.Log(context);  calling the parent log method
+  }
+}
+```
+ You can change to your logger in the Startup.cs file:
+ ```cs
+ config.Services.Replace(typeof(ExceptionLogger), new UnhandledExceptionLogger());
+```
+
+#### Global Exception Handler
+
+### Adding Documentation To An API
+
+You can add in XML comments which can be displayed for users of your API. Visual Studio can generate the XML for these comments.
+
+```cs
+/// <summary>
+/// Gets a list of all tours
+/// </summary>
+/// <param name="freeOnly">Show free tours only?</param>
+/// <returns>List of all matching tours</returns>
+[HttpGet]
+public List<TourDto> GetAllTours([FromUri]bool freeOnly = false)
+```
+Add the Microsoft.AspNet.WebApi.HelpPage package to your project, which will create views and a controller for your help pages. Replace GlobalConfiguration.Configuration calls anywhere in your project with Startup.HttpConfiguration.
