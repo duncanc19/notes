@@ -398,3 +398,54 @@ You can add in XML comments which can be displayed for users of your API. Visual
 public List<TourDto> GetAllTours([FromUri]bool freeOnly = false)
 ```
 Add the Microsoft.AspNet.WebApi.HelpPage package to your project, which will create views and a controller for your help pages. Replace GlobalConfiguration.Configuration calls anywhere in your project with Startup.HttpConfiguration.
+
+
+### Security
+
+#### Authorize and AllowAnonymous Attribute
+
+The authorize attribute is an easy way to enforce authorisation before passing data, you can put it above a method or class like other attributes. Automatically you'll get a 401 unauthorized response and a message saying you don't have authorization.
+
+```cs
+[Authorize]
+[AllowAnonymous]
+```
+AllowAnonymous works as an exception to a class which has an authorize attribute, allowing people to access this model without needing authentication.
+
+#### Setting User Principal
+```cs
+internal class AutoAuthenticationHandler : DelegatingHandler
+{
+  
+}
+```
+### Json Web Tokens
+
+A security token for the web in Json format. It contains three parts:
+
+A header - to give some basic metadata about the token, like the hashing algorithm used to create the signature
+
+Payload - the body of the token, containing all the information 
+
+Signature - makes the token secure based on a secret code which is used to convert the data into a hash
+
+First you submit credentials(i.e. username and password) to an unsecured endpoint in the API, which will verify your data and then it will issue a token in the response body. For all subsequent requests to the API, the token will be sent in the authorization header.
+
+Authorization: Bearer <Token>
+    
+Add the JWT package to the project with Nuget - Microsoft.Owin.Security.Jwt
+
+Add a method to the Startup.cs class
+
+```cs
+public void ConfigureJwt(IAppBuilder app)
+{
+    app.UseJwtBearerAuthentication(new JwtBearerAuthenticationOptions {
+        AuthenticationMode = AuthenticationMode.Active,
+        AllowedAudiences = new [] { GlobalConfig.Audience },
+        IssuerSecurityKeyProviders = new IIssuerSecurityKeyProvider[]
+        {
+            new SymmetricKeyIssuerSecurityKeyProvider(GlobalConfig.Audience, GlobalConfig.Secret);
+        }
+    });
+}
