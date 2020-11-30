@@ -115,3 +115,53 @@ app.post('/profile', (req, res) => {
 
 app.listen(3000);
 ```
+
+#### Middleware
+
+Express has middleware with the use function which allows you to modify requests before they get passed through to the routes  
+
+```js
+app.use((req, res, next) => {
+    console.log("hello!");
+    next();
+});
+
+app.use(express.urlencoded({extended: false})); // middleware which converts form data
+app.use(express.json()); // middleware to parse json
+```
+
+### RESTful APIs
+
+An API which follows the rules so that we have compatibility across different systems.
+
+GET to receive a resource, PUT to change a resource, POST to create a resource and DELETE to remove it.
+
+URL routes should make sense - the noun of what we want to receive.
+
+REST APIs are stateless - each request has enough information for a proper response, doesn't need to remember information
+
+```js
+app.get('/:id', (req, res) => {
+    req.query // localhost:3000/?name=dom&age=15    you'd get { name: 'dom', age: '15' }
+    req.body
+    req.headers
+    req.params // parameters of the URL - localhost:3000/1234   you'd get id: '1234'
+
+    res.status(404).send("Not found");
+    res.send(user); // automatically does JSON.stringify(), don't need to specify content type
+});
+```
+
+#### Serving static files(HTML, CSS)
+
+This is in a file system that has a public folder with an index.html file.
+
+```js
+const express = require('express');
+
+const app = express();
+
+app.use(express.static(__dirname + '/public'));
+
+app.listen(3000);
+```
