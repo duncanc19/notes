@@ -84,3 +84,34 @@ const server = http.createServer((request, response) => {
 
 server.listen(3000); // listen on port 3000
 ```
+
+### Express
+
+Express is a package which simplifies creating an API/setting up a server
+
+Install with: npm install express
+
+```js
+const express = require('express');
+
+const app = express();
+
+const user = {
+    name: "Bob",
+    hobby: "Footie"
+}
+
+app.get('/', (req, res) => {
+    res.send(user); // automatically does JSON.stringify(), don't need to specify content type
+});
+
+app.get('/hello', (req, res) => {
+    res.send('Hello!'); // automatically does JSON.stringify(), don't need to specify content type
+});
+
+app.post('/profile', (req, res) => {
+    res.send(user);
+});
+
+app.listen(3000);
+```
