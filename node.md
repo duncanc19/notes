@@ -59,3 +59,28 @@ npm install nodemon --save-dev / adding a dev dependency
   "start": "nodemon"
 }
 ```
+
+### Building a Server
+
+```js
+const http = require('http');
+
+const server = http.createServer((request, response) => {
+    console.log(`Headers: ${request.headers}`);
+    console.log(`Method: ${request.method}`);
+    console.log(`url: ${request.url}`);
+
+    const user = {
+        name: "Darren",
+        hobby: "Eating"
+    }
+
+    response.setHeader('Content-Type', 'text/html');
+    response.setHeader('Content-Type', 'application/json');
+
+    // response.end('<h1>Hello!</h1>');
+    response.end(JSON.stringify(user));
+});
+
+server.listen(3000); // listen on port 3000
+```
