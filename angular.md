@@ -193,3 +193,72 @@ showArtist(e, artist) {
     console.log(artist.songs);
   }
 ```
+
+### Properties
+
+```js
+[ PROP ]
+```
+Properties mean that the tag will only be rendered when the expression it is set to has been evaluated.
+```html
+<img 
+  style="width:70px;"
+  [src]="'./assets/images' + artist.shortname + '_tn.jpg'"
+  alt="{{ 'Photo of ' + artist.name }}">
+```
+
+Adding highlighting toggle using property:
+```html
+<li 
+  *ngFor="let artist of artists"
+  (click)="showArtist($event, artist)"
+  [style.backgroundColor]="artist.highlight ? '#EEE' : '#FFF'">
+  <ul>{{ artist.name }}: 
+    <li *ngFor="let song of artist.songs">
+      <ol>{{ song }}</ol>
+    </li>
+  </ul>
+</li>
+```
+
+```js
+showArtist(artist) {
+    this.query = artist.name;
+    artist.highlight = !artist.highlight;
+  }
+```
+
+### Two-way Binding
+
+Useful for tracking changes in form elements.
+
+```js
+[(ngModel)] // for input fields
+[(ngControl)] // form elements that are not an input field
+```
+
+You need to import the Forms module to use them. When you add a new import you need to add it to the app.module imports section and the import statement to the module it's used in.
+
+```html
+<input type="text"
+[(ngModel)]="query">
+```
+This means that the query variable will be updated to whatever is in the input field.
+
+```js
+import { FormsModule } from '@angular/forms';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+```
+
