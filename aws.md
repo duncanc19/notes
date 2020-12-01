@@ -45,3 +45,16 @@ Databases - Relational Database Service(RDS), DynamoDB(Non-relational databases)
 Storage - Simple storage service(S3), Glacier
 
 Network - VPC, Route 53(DNS service)
+
+### AWS Global Infrastructure
+
+An **availability zone** is basically a data centre or several data centres which are close together.
+
+A data centre is a building filled with servers.
+
+A **region** is a geographical area and consists of two or more availability zones. **Edge locations** are endpoints for AWS to cache content, e.g. if someone in London downloads something from New York, the first time it'll be slow but then if someone in the area downloads it after it will be cached in an edge location near London.
+
+Choose a region based on:
+- Data sovereignty laws(you might have to store data in the same country)
+- Latency to end users(where are the majority of your users?)
+- AWS Services - some regions get services released later
