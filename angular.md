@@ -262,3 +262,42 @@ import { FormsModule } from '@angular/forms';
 })
 ```
 
+### Lifecycle Methods
+
+onInit - requires additional imports, need to subscribe to observable
+
+In app.module.ts file:
+```js
+import { HttpClientModule } from '@angular/common/http';
+
+imports: [ BrowserModule, AppRoutingModule, FormsModule, HttpClientModule ]
+```
+
+The class/module needs to implement OnInit to use it. This is using an HTTP get request to get the information from a json file in the assets folder, instead of having the artists info in the class.
+
+```js
+export class AppComponent implements OnInit {
+  title = 'the Learn Angular app';
+  query: string;
+  artists: any[];
+  something: any;
+
+  showArtist(artist) {
+    this.query = artist.name;
+    artist.highlight = !artist.highlight;
+  }
+
+  constructor(private http: HttpClient) {
+    this.query = '';
+  }
+
+  ngOnInit(): void {
+    this.http.get<Object>('../assets/data.json').subscribe(
+      data => {
+        this.artists = data;
+      }
+    );
+  }
+}
+```
+
