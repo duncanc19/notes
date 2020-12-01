@@ -71,3 +71,88 @@ You then need to add them to the angular.json file.
    "../node_modules/bootstrap/dist/js/bootstrap.bundle.js"]
 ]
 ```
+
+### Templates
+
+You can have a templateUrl in the decorator which just points to an HTML file, or you can change it to template and write ES6 syntax in the decorator itself(wrap html in backticks).
+
+```js
+@Component({
+  selector: 'app-root',
+  template: `
+    <h1>Welcome to my website!</h1>
+    <p>Hello there</p>
+  `,
+  styleUrls: ['./app.component.css']
+})
+```
+
+However, it's often easier and cleaner to keep it in the html file. You can do the same with styles in the decorator.
+
+#### Binding data to templates
+
+**Expressions** {{ }} making variables declared in your components available inside your templates.
+
+**Directives** - commands used in your HTML which look like attributes with a few extra characters.
+
+You can set up variables using the constructor when the class is created.
+
+Angular is regularly used with Typescript, where you declare the variable's type.
+
+```js
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'the Learn Angular app';
+  query: string;
+
+  constructor() {
+    this.query = 'Bonjour';
+  }
+}
+```
+```html
+<h1>Welcome to my website: {{ title }}</h1>
+<p>I can access the query! Here it is: {{ query }}</p>
+```
+
+### Directives
+
+This example shows a variable which is initialised to an array of objects. Two directives(ngFor - like a foreach) are used in the html file to loop through the artists and then the songs in the artist.
+```js
+export class AppComponent {
+  title = 'the Learn Angular app';
+  query: string;
+  artists: any[];
+  something: any;
+
+  constructor() {
+    this.query = 'Bonjour';
+    this.artists = [
+      {
+        "name": "Michael Jackson",
+        "songs": ["Billie Jean", "Smooth Criminal", "You Rock My World"]
+      },
+      {
+        "name": "Justin Bieber",
+        "songs": ["Sorry", "What Do You Mean", "Beauty and a Beat"]
+      }
+    ]
+  }
+}
+```
+
+```html
+<li *ngFor="let artist of artists">
+  <ul>{{ artist.name }}: 
+    <li *ngFor="let song of artist.songs">
+      <ol>{{ song }}</ol>
+    </li>
+  </ul>
+</li>
+```
