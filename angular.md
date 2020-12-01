@@ -301,3 +301,39 @@ export class AppComponent implements OnInit {
 }
 ```
 
+
+### Generating Components
+
+Easiest to use the CLI - *ng generate component artist-items*. This generates a sub-folder inside app with four files - component, html, css and test. It automatically generates import statements, the decorator and an export of the class. It also updates the app module, bringing in an import statement and adding it to declarations.
+
+You need to import the component into where you want to use it. The inputs section of the decorator is where you name variables which are passed into it through props.
+
+ArtistItemsComponent
+```
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-artist-items',
+  templateUrl: './artist-items.component.html',
+  styleUrls: ['./artist-items.component.css'],
+  inputs: ['artist']
+})
+export class ArtistItemsComponent implements OnInit {
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+}
+```
+Artist prop being passed into the artist-items component: <app-artist-items [artist]="artist"></app-artist-items>
+```html
+<li 
+  *ngFor="let artist of artists"
+  (click)="showArtist(artist)"
+  [style.backgroundColor]="artist.highlight ? '#EE3' : '#1FF'">
+  <app-artist-items [artist]="artist"></app-artist-items>
+</li>
+```
+
+It makes your code easier to update and easier to test.
