@@ -89,7 +89,7 @@ You can have a templateUrl in the decorator which just points to an HTML file, o
 
 However, it's often easier and cleaner to keep it in the html file. You can do the same with styles in the decorator.
 
-#### Binding data to templates
+### Binding data to templates
 
 **Expressions** {{ }} making variables declared in your components available inside your templates.
 
@@ -123,6 +123,8 @@ export class AppComponent {
 
 ### Directives
 
+Directives are added to the HTML and start with a star.
+
 This example shows a variable which is initialised to an array of objects. Two directives(ngFor - like a foreach) are used in the html file to loop through the artists and then the songs in the artist.
 ```js
 export class AppComponent {
@@ -155,4 +157,39 @@ export class AppComponent {
     </li>
   </ul>
 </li>
+```
+
+### ngIf Directive
+
+Checks if variable is truthy and only renders if evaluates to true.
+
+```html
+<p 
+  *ngIf="query">I can access the query! Here it is: {{ query }}</p>
+```
+
+### Events
+
+Add event listener to an HTML tag:
+```html
+(click)="showArtist($event, artist)"
+
+<li 
+  *ngFor="let artist of artists"
+  (click)="showArtist($event, artist)">
+  <ul>{{ artist.name }}: 
+    <li *ngFor="let song of artist.songs">
+      <ol>{{ song }}</ol>
+    </li>
+  </ul>
+</li>
+```
+
+Functions in a component are declared like this, no need for function or ()=>:
+```js
+showArtist(e, artist) {
+    console.log(e);
+    this.query = artist.name;
+    console.log(artist.songs);
+  }
 ```
