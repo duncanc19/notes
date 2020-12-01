@@ -58,3 +58,10 @@ Choose a region based on:
 - Data sovereignty laws(you might have to store data in the same country)
 - Latency to end users(where are the majority of your users?)
 - AWS Services - some regions get services released later
+
+### AWS Support Packages
+
+- **Basic** - free
+- **Developer** - starts at $29 a month, scales based on usage
+- **Business** - starts at $100 a month, scales based on usage
+- **Enterprise** - $15000 a month, scales, you get a Technical Account Manager
