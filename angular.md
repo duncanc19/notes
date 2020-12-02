@@ -337,3 +337,38 @@ Artist prop being passed into the artist-items component: <app-artist-items [art
 ```
 
 It makes your code easier to update and easier to test.
+
+### Pipes
+
+There are prebuilt pipes such as the uppercase pipe shown below. You can also generate pipes with the CLI and it is automatically imported in the app-module file - *ng generate pipe search-heroes*. The pipe class implements PipeTransform which gives you the transform method.
+
+transform(pipeData, pipeModifier) - the pipeData is what you want to pass in and the pipeModifier is what you want to base your filtering on.
+
+
+```html
+<h2>{{hero.name | uppercase}} Details</h2>
+
+<li 
+  *ngFor="let artist of (artists | searchArtists: query)"
+  (click)="showArtist(artist)"
+  [style.backgroundColor]="artist.highlight ? '#EE3' : '#1FF'">
+  <app-artist-items [artist]="artist"></app-artist-items>
+</li>
+```
+In this artist example which filters the list based on the query from the input box, artists is piped in to the searchArtists pipe(set by decorator in pipe class) and then query is given as the second parameter to the transform method. The transform method just filters the artists based on their names.
+
+```js
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'searchArtists'
+})
+export class SearchArtistsPipe implements PipeTransform {
+
+  transform(pipeData, pipeModifier): any {
+    return pipeData.filter(item => {
+      return item['name'].toLowerCase().includes(pipeModifier.toLowerCase());
+    })
+  }
+}
+```
