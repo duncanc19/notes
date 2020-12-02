@@ -355,7 +355,7 @@ transform(pipeData, pipeModifier) - the pipeData is what you want to pass in and
   <app-artist-items [artist]="artist"></app-artist-items>
 </li>
 ```
-In this artist example which filters the list based on the query from the input box, artists is piped in to the searchArtists pipe(set by decorator in pipe class) and then query is given as the second parameter to the transform method. The transform method just filters the artists based on their names.
+In this artist example which filters the list based on the query from the input box, artists is piped in to the searchArtists pipe(the name is set by decorator in searchArtistsPipe class) and then query is given as the second parameter to the transform method. The transform method just filters the artists based on their names.
 
 ```js
 import { Pipe, PipeTransform } from '@angular/core';
@@ -372,3 +372,7 @@ export class SearchArtistsPipe implements PipeTransform {
   }
 }
 ```
+
+### Sub-components
+
+You can have sub-components to break down components into smaller pieces.
