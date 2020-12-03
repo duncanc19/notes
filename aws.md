@@ -65,3 +65,53 @@ Choose a region based on:
 - **Developer** - starts at $29 a month, scales based on usage
 - **Business** - starts at $100 a month, scales based on usage
 - **Enterprise** - $15000 a month, scales, you get a Technical Account Manager
+
+### Set Up A Billing Alarm
+
+Go into CloudWatch and then through to the Alarms section. Click on Create Alarm and choose the price when you want to have an alert if billing goes over that. You then need to create a Simple Notification Service(SNS) topic, give the alarm a name and enter an email address. You get sent an email to confirm the subscription to the topic. You can then make a name and description and then create the alarm!
+
+### Identity and Access Management
+
+IAM allows you to manage **users** and their **level of access** to the AWS console. It gives you centralised control of your AWS account, shared access, granular permissions, multi-factor authentication, the ability to provide temporary access to users and a customisable password rotation policy.
+
+Terminology:
+
+- **Users:** end users, employees, people
+- **Groups:** collection of users, users of group inherit permissions
+- **Roles:** can create a role and assign it to resources, e.g. virtual machine is given permission to access certain resources
+- **Policies:** provides permissions for users, groups and roles, written in JSON 
+
+In the IAM section, you can set up Two-factor authentication. In Account Settings, you can set a password policy to make your passwords more secure.
+
+You can go to users and create a user, add them to a group, create groups. When you create a group, you add a policy and you can create your own or choose a default one. You can then add tags to the user to store metadata, data about the user.
+
+After you've added a user, you will get an access ID(username), secret access key for access from the terminal, a password(temporary) and you can email the user their login details.
+
+Main Points:
+
+- IAM is global
+- You can access the AWS platform via the AWS console, the command line or using a Software Development Kit.
+- Root account has full admin access and is set to the original email which creates the AWS account. Should have 2FA.
+- To set permissions to a group, apply a policy to the group. Users inherit group permissions.
+- You can download a Credential Report in IAM, which will show info about passwords, access keys and 2-factor authentication
+
+### S3 - Simple Storage Service
+
+A safe place to save your files which won't change(flat files like pictures, videos). 
+
+- It is object-based(key-value where key is name and value is data)
+- Files can be 0 bytes to 5TB
+- Unlimited Storage
+- Files are stored in buckets(a folder in the cloud).
+- Universal namespace(must be a unique name) - e.g. https://s3-eu-west-1.amazonaws.com/acloudguru
+
+- Only suitable for objects, not OS or database.
+- When you upload or modify you get a 200 HTTP Status Code.
+- Read after write consistency after PUTS of new objects(can retrieve info as soon as you've uploaded it)
+- Eventual consistency for overwrite PUTS and DELETES - can take time to propagate(if you try to retrieve data immediately after editing you may get the old version)
+
+#### Types of S3
+
+- All types of S3 have 11 9's durability.
+- Standard, Infrequently Accessed(IA) - cheaper but still requires rapid access, IA One Zone, Intelligent Tiering(uses machine learning to optimise file organisation), Glacier(low cost but slow retrieval), Glacier Deep Archive(super slow) 
+
