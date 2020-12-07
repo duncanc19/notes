@@ -125,6 +125,10 @@ export class AppComponent {
 
 Directives are added to the HTML and start with a star.
 
+**Structural Directives** - create or remove DOM elements 
+
+### ngFor Directive
+
 This example shows a variable which is initialised to an array of objects. Two directives(ngFor - like a foreach) are used in the html file to loop through the artists and then the songs in the artist.
 ```js
 export class AppComponent {
@@ -166,6 +170,30 @@ Checks if variable is truthy and only renders if evaluates to true.
 ```html
 <p 
   *ngIf="query">I can access the query! Here it is: {{ query }}</p>
+```
+
+### Directives using ng-template
+
+The above examples are '*syntactic sugar*'(syntax used to make code easier to read) which is converted into the ng-template:
+
+```js
+<ng-template [ngIf]="mediaItem.watchedOn">
+  <div>Watched on {{ mediaItem.watchedOn }}</div>
+</ng-template>
+```
+
+The ng-template can still be useful if you want to use the same directive for several html tags.
+
+**Attribute Directives** - change the appearance or behaviour of DOM elements
+
+**ngClass Directive**
+
+```js
+<mw-media-item
+  *ngFor="let mediaItem of mediaItems"
+  [mediaItem]="mediaItem"
+  (delete)="onMediaItemDelete($event)"
+  [ngClass]="{ 'medium-movies': mediaItem.medium === 'Movies', 'medium-series': mediaItem.medium === 'Series'"></mw-media-item>
 ```
 
 ### Events
