@@ -196,6 +196,55 @@ The ng-template can still be useful if you want to use the same directive for se
   [ngClass]="{ 'medium-movies': mediaItem.medium === 'Movies', 'medium-series': mediaItem.medium === 'Series'"></mw-media-item>
 ```
 
+### Creating your own directive
+
+You can create your own directive. In the file, you need a Directive decorator to specify the selector and a HostBinding in the class to link it to a property(in this case a CSS class).
+```js
+import { Directive, HostBinding } from '@angular/core';
+
+@Directive({
+  selector: '[mwFavorite]'
+})
+export class FavoriteDirective {
+  @HostBinding('class.is-favorite') isFavorite = true;
+}
+```
+```html
+<svg
+    mwFavorite
+    class="favorite" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+```
+
+If you want to set values using the directive, you need to put the selector in the HTML in square brackets to let angular know you want to do binding. In the directive, you need to add the input package and add a setter method so that it can be updated.
+```html
+<svg
+    [mwFavorite]="mediaItem.isFavorite"
+    class="favorite" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+```
+```js
+export class FavoriteDirective {
+  @HostBinding('class.is-favorite') isFavorite = true;
+  @Input() set mwFavorite(value) {
+    this.isFavorite = value;
+  }
+}
+```
+
+#### Events in directives
+
+In this example, the directive is bound to the CSS class *is-favorite-hovering* and is toggled by mouse entering and leaving the property's area.
+
+```js
+@HostBinding('class.is-favorite-hovering') hovering = false;
+
+@HostListener('mouseenter') onMouseEnter() {
+  this.hovering = true;
+}
+@HostListener('mouseleave') onMouseLeave() {
+  this.hovering = false;
+}
+```
+
 ### Events
 
 Add event listener to an HTML tag:
@@ -375,6 +424,9 @@ transform(pipeData, pipeModifier) - the pipeData is what you want to pass in and
 
 ```html
 <h2>{{hero.name | uppercase}} Details</h2>
+<div>Watched on {{ mediaItem.watchedOn | date: 'shortDate' }}</div>
+<div>Watched on {{ mediaItem.watchedOn | date }}</div>
+<h2>{{ mediaItem.name | slice: 0: 10 }}</h2>
 
 <li 
   *ngFor="let artist of (artists | searchArtists: query)"
@@ -399,6 +451,29 @@ export class SearchArtistsPipe implements PipeTransform {
     })
   }
 }
+```
+
+This example creates a category list which doesn't add duplicates.
+```js
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'categoryList'
+})
+export class CategoryListPipe implements PipeTransform {
+  transform(mediaItems) {
+    const categories = [];
+    mediaItems.forEach(mediaItem => {
+      if (categories.indexOf(mediaItem.category) <= -1) {
+        categories.push(mediaItem.category);
+      }
+    });
+    return categories.join(', ');
+  }
+}
+```
+```html
+<div *ngIf="mediaItems">{{ mediaItems | categoryList }}</div>
 ```
 
 ### Sub-components
