@@ -476,6 +476,62 @@ export class CategoryListPipe implements PipeTransform {
 <div *ngIf="mediaItems">{{ mediaItems | categoryList }}</div>
 ```
 
-### Sub-components
+## Forms
 
-You can have sub-components to break down components into smaller pieces.
+### Template-driven Forms
+
+Template-driven forms are forms written in the HTML file. They're easy to set up, but give you less control and are harder to unit test than model-driven forms. 
+
+ngModel is a directive which binds input, select and textarea, and stores the required user value in a variable and we can use that variable whenever we require that value. You need to add it to each field that you want to be passed through on submit. 
+
+```html
+<form
+  #mediaItemForm="ngForm"
+  (ngSubmit)="onSubmit(mediaItemForm.value)">
+  <label for="name">Name</label>
+  <input type="text" name="name" id="name" ngModel>
+</form>
+```
+
+```js
+export class MediaItemFormComponent {
+  onSubmit(mediaItem) {
+    console.log(mediaItem);
+  }
+}
+```
+
+### Model-driven Forms
+
+Uses the ReactiveFormsModule instead of the normal FormsModule.
+```html
+<form
+  [formGroup]="form"
+  (ngSubmit)="onSubmit(form.value)">
+  <select name="medium" id="medium" formControlName="medium">
+      <option value="Movies">Movies</option>
+      <option value="Series">Series</option>
+  </select>
+</form>
+```
+```js
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+
+export class MediaItemFormComponent implements OnInit {
+  form: FormGroup;
+
+  ngOnInit() {
+    this.form = new FormGroup({
+      medium: new FormControl('Movies'),
+      name: new FormControl(''),
+      category: new FormControl(''),
+      year: new FormControl(''),
+    });
+  }
+
+  onSubmit(mediaItem) {
+    console.log(mediaItem);
+  }
+}
+```
