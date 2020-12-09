@@ -162,3 +162,31 @@ A virtual disk/server in the cloud - allows you to create storage volumes and at
 - When you create an EC2 instance, you can choose the port(Linux SSH uses port 22, Micosoft uses Remote Desktop Protocol port 3389, HTTP port 80 and HTTPS port 443)
 - A security group is basically a virtual firewall, you need to open ports in order to use them. When you set up the instance, you can let everything in with 0.0.0.0/0, you can let just one IP address in with X.X.X.X/32.
 - Always design for failure, have one EC2 instance in each availability zone.
+
+### Using Command Line
+
+You need to log in with your access key and password, which you can download as a csv file when you first create a user. You can ssh into an EC2 to access the account from the terminal using your key value password file.
+
+```
+ssh ec2-user@100.24.45.181 -i MyNVKP.pem
+aws configure // command to add credentials to config so you can do stuff
+aws s3 mb s3://duncan1234-abc // make an S3 bucket
+aws s3 ls // list buckets
+echo 'hello' > hello.txt
+aws s3 cp hello.txt s3://duncan1234-abc // copy file to a bucket
+```
+These commands are being run on EC2, as you are SSHing into the EC2 server to run these commands. Using the EC2 server, you create a new bucket and add a file to it.
+
+You can cd into a .aws directory which contains your config and credentials files. In credentials, there are your access_key_id and your secret_access_key(password), which isn't very secure. If someone gets into your EC2, they can see your password. Roles helps solve this problem.
+
+### Roles
+
+You can create a role in IAM. In this example, the role gives access to EC2 and has an AmazonS3FullAccess policy added to it. Give the role a name and description and then you can go into EC2 and attach a role to an EC2 instance. You still use your private key to SSH into the EC2 instance, but you don't need a credentials file.
+```
+cd ~
+rm -rf .aws // remove the aws credentials and config files so it uses the role
+aws s3 ls
+```
+- Roles are more secure than using access IDs and secret access keys and they're easier to manage.
+- You can apply roles to EC2 instances at any time and changes happen immediately.
+- Roles are universal, you don't need to specify the region they are in.
