@@ -190,3 +190,16 @@ aws s3 ls
 - Roles are more secure than using access IDs and secret access keys and they're easier to manage.
 - You can apply roles to EC2 instances at any time and changes happen immediately.
 - Roles are universal, you don't need to specify the region they are in.
+
+### Create a web server
+
+```
+yum update -y // update to see if there are any packages that need updating on the server
+yum install httpd -y // install Apache
+service httpd start // starts the Apache service
+cd /var/www/html // where the html files are stored in Apache
+```
+
+If you create an index.html file in this folder, you can then access it by going on the public IP address in your web browser.
+
+### Use a Load Balancer
