@@ -614,3 +614,79 @@ This shows how you can do error handling, using the .hasError method or with you
     }
   }
 ```
+
+## Dependency Injection
+
+Angular allows you to create modules which aren't aware of each other. The framework handles creating instances of things and injecting them into places where they are needed. You can inject by specifying the type of objects you pass into a constructor or by using the @Inject decorator, but constructor injection is most common.
+
+- Step 1: use angular provider class, provide helper function or provide the type in the bootstrap call or in the metadata in the decorator.
+- Step 2: tell Angular the types in the constructor.
+
+Angular will then pass in the objects needed. If there is already an object of the specified type available, it will pass that in, if not, it will new up an object which can then be used by other classes if needed. The singleton components(only one of them because they get passed around) will be available to everything below them in the component tree. Something registered at bootstrap(top level) will be available everywhere.
+
+### Class Constructor Injection
+
+This shows a refactor of the previous form code to avoid newing up FormGroup objects and instead passing in a FormBuilder object into the class through the constructor.
+```js
+export class MediaItemFormComponent implements OnInit {
+  form: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit() {
+    this.form = this.formBuilder.group({
+      medium: this.formBuilder.control('Movies'),
+      name: this.formBuilder.control('', Validators.compose([
+        Validators.required,
+        Validators.pattern('[\\w\\-\\s\\/]+')
+      ])),
+      category: this.formBuilder.control(''),
+      year: this.formBuilder.control('', this.yearValidator),
+    });
+  }
+}
+```
+
+### Services
+
+Services can just be general JS classes, they don't need decorators or anything. This allows you to create modules of code which can be reused across the application. Angular has service packages, e.g. Http, FormBuilder, Router. This also makes it much easier to unit test, because you can easily mock the services.
+
+To create your own service, it should have the naming convention of name.service.ts. It needs to be added to the import statements in app.module.ts and you can add a providers property to the NgModule decorator.
+
+```js
+export class MediaItemService {
+  mediaItems = [
+    {
+      id: 1,
+      name: 'Firebug'
+    },
+    {
+      id: 2,
+      name: 'The Small Tall'
+    }, {
+      id: 3,
+      name: 'The Redemption'
+    }
+  ];
+
+  get() {
+    return this.mediaItems;
+  }
+
+  add(mediaItem) {
+    this.mediaItems.push(mediaItem);
+  }
+
+  delete(mediaItem) {
+    const index = this.mediaItems.indexOf(mediaItem);
+    if (index >= 0) {
+      this.mediaItems.splice(index, 1);
+    }
+  }
+}
+
+// in app.module.ts with import statement
+providers: [
+    MediaItemService
+  ]
+```
