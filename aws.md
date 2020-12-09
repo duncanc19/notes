@@ -115,3 +115,16 @@ A safe place to save your files which won't change(flat files like pictures, vid
 - All types of S3 have 11 9's durability.
 - Standard, Infrequently Accessed(IA) - cheaper but still requires rapid access, IA One Zone, Intelligent Tiering(uses machine learning to optimise file organisation), Glacier(low cost but slow retrieval), Glacier Deep Archive(super slow) 
 
+### CloudFront
+
+CloudFront is Amazon's Content Delivery Network(CDN), a system of distributed servers(network) that deliver webpages and other content to a user based on geographic location of the user, the origin of the webpage and a content delivery server.
+
+- Edge Location - Location where content is cached, separate from AWS region
+- Origin - the origin of all the files the CDN will distribute. It can be an S3 bucket, an EC2 instance, an Elastic Load Balancer or Route53.
+- Distribution - The name given to the CDN which consists of a collection of edge locations.
+- Web distribution - typically used for websites
+- RTMP - used for media streaming(being phased out).
+
+- Edge locations are not just READ only, you can write to them too.
+- Objects are cached in edge locations for the life of the TTL(Time To Live), counted in seconds.
+- You can clear cached objects but you will be charged.
