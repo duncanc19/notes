@@ -128,3 +128,37 @@ CloudFront is Amazon's Content Delivery Network(CDN), a system of distributed se
 - Edge locations are not just READ only, you can write to them too.
 - Objects are cached in edge locations for the life of the TTL(Time To Live), counted in seconds.
 - You can clear cached objects but you will be charged.
+
+### EC2 - Elastic Compute Cloud
+
+A virtual server(or servers) in the cloud.
+
+Before, you would have to book a server, e.g. Rackspace, you order two servers and they go and set them up, connect them to the internet. You'd have to have a contract for a fixed time like 3 years.
+
+#### EC2 Pricing Models
+
+- **On Demand** - fixed rate by the hour or second with no commitment. Very flexible.
+- **Reserved** - Provides you with capacity reservation with a discount on the hourly charge for an instance. Contract terms 1 to 3 years. There are different prices for types of instances - Standard Reserved(can't convert type of instances), Convertible Reserved Instances(can convert from READ to WRITE etc.), Scheduled Reserved Instances(match capacity if there are big spikes at certain times). 
+- **Spot** - You bid whatever price you want for instance capacity to make it cheaper if you have flexible start and end times. Useful for low computing costs when time isn't important. If Spot instance is terminated by Amazon, you're not charged for the partial hour, if you terminate, you are charged for the hour.
+- **Dedicated Hosts** - Physical EC2 server dedicated for your use. Can reduce costs by allowing you to use existing server-bound software licenses. Sometimes required by law, good for licensing which doesn't support cloud deployments. Purchased on demand.
+
+There are lots of different EC2 instance types: FIGHTDRMCPXZAU
+
+#### Amazon EBS
+
+A virtual disk/server in the cloud - allows you to create storage volumes and attach them to EC2 instances. Once attached, you can create a file system or run a database on these volumes. There are two types:
+
+- **SSD** 
+- General Purpose SSD(GP2) - balances price and performance
+- Provisioned IOPS SSD(IO1) - highest performance SSD volume for mission critical workloads
+- **Magnetic** 
+- Throughput Optimized HDD(ST1) - low cost HDD volume designed for frequently accessed workloads
+- Cold HDD(SC1) - Lowest cost HDD volume designed for less frequently accessed workloads
+
+#### Creating an EC2 Instance
+
+- EC2 is a compute-based service. It is not serverless, it is a server!
+- Use a private key to connect to EC2
+- When you create an EC2 instance, you can choose the port(Linux SSH uses port 22, Micosoft uses Remote Desktop Protocol port 3389, HTTP port 80 and HTTPS port 443)
+- A security group is basically a virtual firewall, you need to open ports in order to use them. When you set up the instance, you can let everything in with 0.0.0.0/0, you can let just one IP address in with X.X.X.X/32.
+- Always design for failure, have one EC2 instance in each availability zone.
