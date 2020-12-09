@@ -121,7 +121,7 @@ export class AppComponent {
 <p>I can access the query! Here it is: {{ query }}</p>
 ```
 
-### Directives
+## Directives
 
 Directives are added to the HTML and start with a star.
 
@@ -415,7 +415,7 @@ Artist prop being passed into the artist-items component: <app-artist-items [art
 
 It makes your code easier to update and easier to test.
 
-### Pipes
+## Pipes
 
 There are prebuilt pipes such as the uppercase pipe shown below. You can also generate pipes with the CLI and it is automatically imported in the app-module file - *ng generate pipe search-heroes*. The pipe class implements PipeTransform which gives you the transform method.
 
@@ -534,4 +534,83 @@ export class MediaItemFormComponent implements OnInit {
     console.log(mediaItem);
   }
 }
+```
+
+### Form Validation
+
+You can add form validation into a model driven form using the Validators package.
+
+```js
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+export class MediaItemFormComponent implements OnInit {
+  form: FormGroup;
+
+  ngOnInit() {
+    this.form = new FormGroup({
+      medium: new FormControl('Movies'),
+      name: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('[\\w\\-\\s\\/]+')
+      ])),
+      category: new FormControl(''),
+      year: new FormControl(''),
+    });
+  }
+}
+
+Validators.pattern('[\\w\\-\\s\\/]+')
+```
+You can disable the button based on whether the form input is valid. You can use just the pattern if you only want to add the CSS class of invalid to the form field but it will not prevent the form being submitted. 
+
+```html
+<button type="submit" [disabled]="!form.valid">Save</button>
+```
+
+#### Custom Validator
+
+You can add a method to your class which is passed in a form control object to do your own validation. You add it as the second argument to the FormControl object without brackets.
+```js
+year: new FormControl('', this.yearValidator)
+
+yearValidator(control: FormControl) {
+    if (control.value.trim().length === 0) {
+      return null;
+    }
+    const year = parseInt(control.value, 10);
+    if (year >= 1900 && year <= 2100) {
+      return null;
+    }
+    return { year: true };
+}
+```
+
+### Error Handling
+
+This shows how you can do error handling, using the .hasError method or with your custom validation you can set the error object to a variable to get messages from it. 
+```html
+<input type="text" name="name" id="name" formControlName="name">
+<div *ngIf="form.get('name').hasError('pattern')" class="error">
+  Name has invalid characters
+</div>
+
+<input type="text" name="year" id="year" maxlength="4" formControlName="year">
+<div *ngIf="form.get('year').errors as yearErrors" class="error">
+  Must be between {{yearErrors.year.min}} and {{yearErrors.year.max}}
+</div>
+```
+```js
+ yearValidator(control: FormControl) {
+    if (control.value.trim().length === 0) {
+      return null;
+    }
+    const year = parseInt(control.value, 10);
+    if (year >= 1900 && year <= 2100) {
+      return null;
+    } else {
+      return {
+        year: { min: minYear, max: maxYear }
+      };
+    }
+  }
 ```
