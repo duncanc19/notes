@@ -774,3 +774,198 @@ constructor(
     private mediaItemService: MediaItemService,
     @Inject(lookupListToken) public lookupLists) {}
 ```
+
+## HTTP
+
+### Mocking an API
+
+You can add a module for HTTP requests called HttpClientModule. You can also mock a backend class for HTTP requests so that you can test/isolate your classes. You add it to the providers section in app.module.ts and set it to the usual class name, so when there is a call for that class, Angular passes in the mock class.
+```js
+import { HttpClientModule, HttpXhrBackend } from '@angular/common/http';
+import { MockXHRBackend } from './mock-xhr-backend';
+
+providers: [
+    { provide: lookupListToken, useValue: lookupLists },
+    { provide: HttpXhrBackend, useClass: MockXHRBackend }
+]
+```
+Mock API
+```js
+import { HttpEvent, HttpRequest, HttpResponse, HttpBackend } from '@angular/common/http';
+import { Observable, Observer } from 'rxjs';
+
+export class MockXHRBackend implements HttpBackend {
+  private mediaItems = [
+    { id: 1, name: 'Firebug', medium: 'Series' },
+    { id: 2, name: 'The Small Tall', medium: 'Movies' }
+  ];
+
+  handle(request: HttpRequest<any>): Observable<HttpEvent<any>> {
+    return new Observable((responseObserver: Observer<HttpResponse<any>>) => {
+      let responseOptions;
+      switch (request.method) {
+        case 'GET':
+          if (request.urlWithParams.indexOf('mediaitems?medium=') >= 0 || request.url === 'mediaitems') {
+            let medium;
+            if (request.urlWithParams.indexOf('?') >= 0) {
+              medium = request.urlWithParams.split('=')[1];
+              if (medium === 'undefined') { medium = ''; }
+            }
+            let mediaItems;
+            if (medium) {
+              mediaItems = this.mediaItems.filter(i => i.medium === medium);
+            } else {
+              mediaItems = this.mediaItems;
+            }
+            responseOptions = {
+              body: {mediaItems: JSON.parse(JSON.stringify(mediaItems))},
+              status: 200
+            };
+          } else {
+            let mediaItems;
+            const idToFind = parseInt(request.url.split('/')[1], 10);
+            mediaItems = this.mediaItems.filter(i => i.id === idToFind);
+            responseOptions = {
+              body: JSON.parse(JSON.stringify(mediaItems[0])),
+              status: 200
+            };
+          }
+          break;
+        case 'POST':
+          const mediaItem = request.body;
+          mediaItem.id = this._getNewId();
+          this.mediaItems.push(mediaItem);
+          responseOptions = {status: 201};
+          break;
+        case 'DELETE':
+          const id = parseInt(request.url.split('/')[1], 10);
+          this._deleteMediaItem(id);
+          responseOptions = {status: 200};
+      }
+
+      const responseObject = new HttpResponse(responseOptions);
+      responseObserver.next(responseObject);
+      responseObserver.complete();
+      return () => {
+      };
+    });
+  }
+
+  _deleteMediaItem(id) {
+    const mediaItem = this.mediaItems.find(i => i.id === id);
+    const index = this.mediaItems.indexOf(mediaItem);
+    if (index >= 0) {
+      this.mediaItems.splice(index, 1);
+    }
+  }
+
+  _getNewId() {
+    if (this.mediaItems.length > 0) {
+      return Math.max.apply(Math, this.mediaItems.map(mediaItem => mediaItem.id)) + 1;
+    } else {
+      return 1;
+    }
+  }
+}
+```
+
+### Making HTTP Calls
+
+You need to import a map function so that you can get information from HTTP GET responses. catchError can be used so that errors from HTTP requests are handled. You can add interfaces which act as the type for the objects that you return/pass in. When calling the HTTP request methods, you can use subscribe to set variables using information from the calls.  
+
+**media-item.service.ts** - where the HTTP requests are made
+```js
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MediaItemService {
+  constructor(private http: HttpClient) {}
+
+  get(medium: string) {
+    const getOptions = {
+      params: { medium }
+    };
+    return this.http.get<MediaItemsResponse>('mediaitems', getOptions)
+      .pipe(
+        map((response: MediaItemsResponse) => {
+          return response.mediaItems;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  add(mediaItem: MediaItem) {
+    return this.http.post('mediaitems', mediaItem)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  delete(mediaItem: MediaItem) {
+    return this.http.delete(`mediaitems/${mediaItem.id}`)
+    .pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.error(error.message);
+    return throwError('A data error occurred, please try again.');
+  }
+}
+
+interface MediaItemsResponse {
+  mediaItems: MediaItem[];
+}
+
+export interface MediaItem {
+  id: number;
+  name: string;
+  medium: string;
+  category: string;
+  year: number;
+  watchedOn: number;
+  isFavorite: boolean;
+}
+```
+**media-item-list.component.ts** - where the HTTP requests are called and returned info is used
+```js
+import { Component, OnInit } from '@angular/core';
+import { MediaItemService, MediaItem } from './media-item.service';
+
+@Component({
+  selector: 'mw-media-item-list',
+  templateUrl: './media-item-list.component.html',
+  styleUrls: ['./media-item-list.component.css']
+})
+export class MediaItemListComponent implements OnInit {
+  medium = '';
+  mediaItems: MediaItem[];
+
+  constructor(private mediaItemService: MediaItemService) {}
+
+  ngOnInit() {
+    this.getMediaItems(this.medium);
+  }
+
+  onMediaItemDelete(mediaItem: MediaItem) {
+    this.mediaItemService.delete(mediaItem)
+      .subscribe(() => {
+        this.getMediaItems(this.medium);
+      });
+  }
+
+  getMediaItems(medium: string) {
+    this.medium = medium;
+    this.mediaItemService.get(medium)
+      .subscribe(mediaItems => {
+        this.mediaItems = mediaItems;
+      });
+  }
+}
+```
