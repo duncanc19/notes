@@ -649,9 +649,7 @@ export class MediaItemFormComponent implements OnInit {
 
 ### Services
 
-Services can just be general JS classes, they don't need decorators or anything. This allows you to create modules of code which can be reused across the application. Angular has service packages, e.g. Http, FormBuilder, Router. This also makes it much easier to unit test, because you can easily mock the services.
-
-To create your own service, it should have the naming convention of name.service.ts. It needs to be added to the import statements in app.module.ts and you can add a providers property to the NgModule decorator.
+Services can just be general JS classes, they don't need decorators or anything. This allows you to create modules of code which can be reused across the application. Angular has service packages, e.g. Http, FormBuilder, Router. This also makes it much easier to unit test, because you can easily mock the services. To create your own service, it should have the naming convention of name.service.ts. 
 
 ```js
 export class MediaItemService {
@@ -684,9 +682,95 @@ export class MediaItemService {
     }
   }
 }
-
+```
+There are two ways you can register the service, by adding to the import statements in app.module.ts and adding a providers property to the NgModule decorator:
+```js
 // in app.module.ts with import statement
 providers: [
     MediaItemService
   ]
+```
+Or by adding an injectible decorator to the services class and setting it to provided in root(this is preferred because it keeps it close to the logic and it is better for optimisation):
+```js
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+```
+
+### Injecting the service into a component
+
+```js
+export class MediaItemListComponent implements OnInit {
+  mediaItems;
+
+  constructor(private mediaItemService: MediaItemService) {}
+
+  ngOnInit() {
+    this.mediaItems = this.mediaItemService.get();
+  }
+
+  onMediaItemDelete(mediaItem) {
+    this.mediaItemService.delete(mediaItem);
+  }
+}
+
+onSubmit(mediaItem) {
+    this.mediaItemService.add(mediaItem);
+}
+```
+
+### @Inject decorator
+
+You can just use TypeScript in constructors to inject classes, but you need to use the @Inject decorator for value types.
+
+In the component, import Inject and add the @Inject decorator to the constructor, passing in the name provided in the providers section of the app.module.ts file: 
+```js
+import { Component, OnInit, Inject } from '@angular/core';
+
+constructor(
+    private formBuilder: FormBuilder,
+    private mediaItemService: MediaItemService,
+    @Inject('lookupListToken') public lookupLists) {}
+```
+In the app.module.ts file:
+```js
+const lookupLists = {
+  mediums: ['Movies', 'Series']
+};
+
+providers: [
+    { provide: 'lookupListToken', useValue: lookupLists }
+]
+```
+
+### Injection Token
+
+Injection tokens allow us to do the same thing but remove the string literals which reduces the risk of errors. It also makes it easier to keep all your objects to pass around in one file.
+
+**providers.ts**
+```js
+import { InjectionToken } from '@angular/core';
+
+export const lookupListToken = new InjectionToken('lookupListToken');
+
+export const lookupLists = {
+  mediums: ['Movies', 'Series']
+};
+```
+**app.module.ts**
+```js
+import { lookupListToken, lookupLists } from './providers';
+
+providers: [
+    { provide: lookupListToken, useValue: lookupLists }
+]
+```
+**media-item-form.component.ts**
+```js
+constructor(
+    private formBuilder: FormBuilder,
+    private mediaItemService: MediaItemService,
+    @Inject(lookupListToken) public lookupLists) {}
 ```
