@@ -202,4 +202,44 @@ cd /var/www/html // where the html files are stored in Apache
 
 If you create an index.html file in this folder, you can then access it by going on the public IP address in your web browser.
 
+When you create an EC2 instance, you can bootstrap the instance(set it up automatically) when you create it by putting commands in the Advanced Details section in Configure Instance Details with *#!/bin/bash* to make sure you're in the right directory and then the same commands as above.
+
 ### Use a Load Balancer
+
+A load balancer is a device that acts as a reverse proxy and distributes network or application traffic across a number of servers. Load balancers are used to increase capacity (concurrent users) and reliability of applications.
+
+There are three kinds of load balancer:
+
+- **Application Load Balancer** - Layer 7(make intelligent routing decisions, sending requests to the quickest routes)
+- **Network Load Balancer** - extreme performance/static IP addresses
+- **Classic Load Balancer** - Test and dev, keep costs low
+
+You should always have EC2 instances in multiple availability zones to make sure the server is always up.
+
+### Databases
+
+#### Relational databases
+
+There are 6 Relational databases(RDS) on AWS:
+
+- SQL Server, Oracle, MySQL Server, PostgreSQL, Aurora(Amazon's own), MariaDB
+
+- You can have multiple availability zones for disaster recovery(if there's a problem with your primary database, it will automatically redirect to your secondary database). 
+- You have read replicas to improve performance - all WRITES go to your primary database and all READS go to your secondary database(you can have 5 copies). 
+
+#### Non-relational Databases
+
+JSON/NoSQL - data can be flat, you can have nested fields, columns in the table can vary and this doesn't affect other rows in the database.
+
+- **DynamoDB** is used for non-relational databases.
+
+- **Online Transaction Processing(OLTP)** is just getting or inserting a row from a database.
+- **Online Analytics Processing(OLAP)** pulls in large numbers of records to analyse the data(slow and uses a lot of processing).
+- **Data warehousing** is used for business intelligence, so you can do online analytics processing not on your production database.
+- Data warehousing databases use a different type of architecture which is designed for doing analytics, the Amazon data warehouse solution is called **RedShift**.
+
+**ElastiCache** is a web service that makes it easy to deploy, operate and scale an in-memory cache in the cloud to improve performance(so you don't have to query the database for common queries every time). There are two caching engines:
+- Memcached. 
+- Redis
+
+**RedShift** for business intelligence, **ElastiCache** to speed up performance.
