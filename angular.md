@@ -969,3 +969,72 @@ export class MediaItemListComponent implements OnInit {
   }
 }
 ```
+
+## Routing
+
+### Configuring Routing
+
+You can configure routing by creating an app.routing.ts file, setting up your routes in a Routes object and then exporting the routes using RouterModule.forRoot.
+```js
+import { Routes, RouterModule } from '@angular/router';
+import { MediaItemFormComponent } from './media-item-form.component';
+import { MediaItemListComponent } from './media-item-list.component';
+
+const appRoutes: Routes = [
+  { path: 'add', component: MediaItemFormComponent },
+  { path: ':medium', component: MediaItemListComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'all' } // this redirects the route to all, which is a medium type, so it will display the MediaItemListComponent with all as medium type, pathMatch: full means it will only work when path is exactly the same
+];
+
+export const routing = RouterModule.forRoot(appRoutes);
+```
+Then you just need to import the routing variable in the app.module.ts file and add it to the imports in the decorator.
+
+### Router Outlets and Links
+
+Router-outlet in Angular works as a placeholder which is used to load the different components dynamically based on the activated component or current route state. Navigation can be done using the router-outlet directive and the activated component will take place inside the router-outlet to load its content.
+
+The app.component.html is now set up to always render the buttons to link to the different routes(specified in routerLink). The component then renders whichever component is specified on the route using router-outlet.
+```js
+<nav>
+  <a routerLink="/">
+    <img src="assets/04.png" class="icon" />
+  </a>
+  <a routerLink="/Movies">
+    <img src="assets/03.png" class="icon" />
+  </a>
+  <a routerLink="/Series">
+    <img src="assets/02.png" class="icon" />
+  </a>
+</nav>
+<section>
+  <header>
+    <h1>Media Watch List</h1>
+    <p class="description">Keeping track of the media I want to watch.</p>
+  </header>
+  <router-outlet></router-outlet>
+</section>
+```
+### Route Parameters
+
+To use route parameters, you need to import the ActivatedRoute class, inject it into your component and use paramMap to get the route parameter.
+
+**media-item-list.component.ts**
+```js
+import { ActivatedRoute } from '@angular/router';
+
+  constructor(
+    private mediaItemService: MediaItemService,
+    private activatedRoute: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.activatedRoute.paramMap
+      .subscribe(paramMap => {
+        let medium = paramMap.get('medium');
+        if (medium.toLowerCase() === 'all') {
+          medium = '';
+        }
+        this.getMediaItems(medium);
+      });
+  }
+```
