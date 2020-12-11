@@ -1038,3 +1038,65 @@ import { ActivatedRoute } from '@angular/router';
       });
   }
 ```
+
+### Creating Modules(Feature NgModule for routes)
+
+You can create modules to break up your code and make routing/imports less complicated when a project gets more complex. You can put the components the module uses into a file and add a module and routing file.
+
+**new-item.module.ts**
+```js
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MediaItemFormComponent } from './media-item-form.component';
+import { newItemRouting } from './new-item.routing';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    newItemRouting
+  ],
+  declarations: [
+    MediaItemFormComponent
+  ]
+})
+export class NewItemModule {}
+```
+**new-item.routing.ts**
+```js
+import { Routes, RouterModule } from '@angular/router';
+import { MediaItemFormComponent } from './media-item-form.component';
+
+const newItemRoutes: Routes = [
+  { path: 'add', component: MediaItemFormComponent }
+];
+
+export const newItemRouting = RouterModule.forChild(newItemRoutes);
+```
+
+The routing is the more or less the same as app.routing but you use forChild instead of forRoot. You can then remove the imports in the app.module and replace them with an import for the module and take out any rooting handled in the module.
+
+### Lazy loading a route module
+
+When code is separated into modules, you can implement lazy loading so not all of the code is sent over to the client straight away, the modules get sent over when needed. You take the intended module out of the AppModule as that it is what is provided straight away to the client. Then you register the route with lazy loading in the app.routing file.
+
+The import function returns a promise and you call the then method to return the module when it is requested. You make the path in the module router an empty string, as it is being routed in the app.routing file, so it has already matched with 'add'.
+
+**app.routing.js**
+```js
+const appRoutes: Routes = [
+  {
+    path: 'add',
+    loadChildren: () => import('./new-item/new-item.module').then(m => m.NewItemModule)
+  },
+  { path: ':medium', component: MediaItemListComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'all' }
+];
+```
+**new-item.routing.js**
+```js
+const newItemRoutes: Routes = [
+  { path: '', component: MediaItemFormComponent }
+];
+```
