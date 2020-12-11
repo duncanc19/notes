@@ -243,3 +243,33 @@ JSON/NoSQL - data can be flat, you can have nested fields, columns in the table 
 - Redis
 
 **RedShift** for business intelligence, **ElastiCache** to speed up performance.
+
+
+### Autoscaling
+
+Used to stop there being a single point of failure(a single EC2 instance in one Availability Zone). You can create an autoscaling group using an AMI(Amazon Machine Image - a photograph of your machine) and deploy multiple EC2 instances across more AZs so your website is fault tolerant. You have to create a launch configuration and then use that to set up autoscaling groups. When you create an autoscaling group, a role is automatically added to it.
+
+### Buying a Domain Name
+
+DNS(Domain Name System) - the process computers use to resolve domain names to IP addresses, like a phonebook. 
+
+Amazon's DNS service is called Route53, it's what you use for buying domain names, it's under the Networking section. You can choose a domain name and see if it's available, you need to create a bucket with the same name when you buy a domain name.
+
+Route53 is global, like IAM and S3. You can use it to direct traffic all around the world.
+
+### Elastic Beanstalk
+
+- A way of quickly deploying applications to the cloud where you just give it the code and don't worry about infrastructure. 
+- A Compute service which automatically handles details of capacity provisioning, load balancing, scaling and application health monitoring. 
+- You don't deal with creating buckets or setting things up, it automates it for you - creates an EC2 instance, S3 bucket etc.
+
+### CloudFormation
+
+- A service that helps you model and set up your AWS resources so that you can spend less time managing them and more time focussing on your applications that run in AWS.
+- You create a template(or use an existing one) that describes all the resources that you want(EC2, RDS instances etc.) and CloudFormation provisions and configures the resources for you. 
+
+#### Elastic Beanstalk and CloudFormation differences
+
+- Elastic Beanstalk and CloudFormation are both free, but the resources they provision are not.
+- Elastic Beanstalk is limited in whatit can provision and is not programmable
+- CloudFormation can provision almost any AWS service and is completely programmable.
