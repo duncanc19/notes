@@ -1100,3 +1100,7 @@ const newItemRoutes: Routes = [
   { path: '', component: MediaItemFormComponent }
 ];
 ```
+
+## CSS
+
+Angular automatically 'shims' CSS code for components so that each component's CSS has a unique attribute when run in the browser. This creates a component scope and prevents any leakage of CSS from one component to another, so if they are selecting <p> tags for example in the component CSS, it won't affect other components' <p> tags.
